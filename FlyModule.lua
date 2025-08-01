@@ -15,7 +15,7 @@ local FlyModule = {
 }
 
 local RSettings = {
-	FlyMethod = "CFrame",
+	FlyMethod = "Velocity",
 }
 
 local RunService = game:GetService("RunService")
@@ -194,7 +194,7 @@ function FlyModule:Fly(Toggle:boolean)
 		end
 
 		if FlyModule.Settings.FlyMethod == "Velocity" then
-			LP.Character.HumanoidRootPart.AssemblyLinearVelocity = AV + Vector3.new(0, workspace.Gravity / 100, 0)
+			LP.Character.HumanoidRootPart.AssemblyLinearVelocity = AV + Vector3.new(0, 2.25, 0)
 			return
 		end
 		
