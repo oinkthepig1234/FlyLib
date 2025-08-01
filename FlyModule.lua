@@ -79,13 +79,11 @@ setmetatable(FlyModule.Settings, {
 })
 
 if FlyModule.Settings.FlyMethod == "BodyMovers" then
-	print("hi")
 	if not LP.Character then
 		LP.CharacterAdded:Wait()
 	end
-	print("hi3")
 	if not LP.Character:FindFirstChild("HumanoidRootPart") then
-		repeat local c = LP.Character.ChildAdded:Wait() print("hi2") until c.Name == "HumanoidRootPart"
+		repeat local c = LP.Character.ChildAdded:Wait() until c.Name == "HumanoidRootPart"
 	end
 	if LP.Character.HumanoidRootPart:FindFirstChild("OFlyVelocity") then
 		return
@@ -114,7 +112,7 @@ function FlyModule:Fly(Toggle:boolean)
 
 	for i,v in pairs(FlyModule.Keybinds) do
 		if not UserInputService:IsKeyDown(i) then
-
+			return
 		end
 		table.insert(KBP, i)
 		local MD = string.sub(v, 1, 1)
