@@ -104,17 +104,17 @@ function FlyModule:Fly(Toggle:boolean)
 		v:Disconnect()
 		Connections[i] = nil
 	end
-	
+
 	if not Toggle then
 		return
 	end
-	
+
 	local Movement = {X = 0, Y = 0, Z = 0}
 	local KBP = {}
-	
+
 	for i,v in pairs(FlyModule.Keybinds) do
 		if not UserInputService:IsKeyDown(i) then
-			
+
 		end
 		table.insert(KBP, i)
 		local MD = string.sub(v, 1, 1)
@@ -125,7 +125,7 @@ function FlyModule:Fly(Toggle:boolean)
 			Movement[MV] -= 1
 		end
 	end
-	
+
 	table.insert(Connections, UserInputService.InputBegan:Connect(function(i, g)
 		if g then
 			return
@@ -143,7 +143,7 @@ function FlyModule:Fly(Toggle:boolean)
 			Movement[MV] -= 1
 		end
 	end))
-	
+
 	table.insert(Connections, UserInputService.InputEnded:Connect(function(i, g)
 		local m = FlyModule.Keybinds[i.KeyCode]
 		if not m then
@@ -161,25 +161,29 @@ function FlyModule:Fly(Toggle:boolean)
 			Movement[MV] -= 1
 		end
 	end))
-	
-	table.insert(Connections, RunService.Heartbeat:Connect(function()
+	local YL
+
+	table.insert(Connections, RunService.Heartbeat:Connect(function(dt)
 		if not LP.Character then
 			return
 		end
 		if not LP.Character:FindFirstChild("HumanoidRootPart") then
 			return
 		end
+
 		local camCF = workspace.CurrentCamera.CFrame
 		local AMovement = {}
 		if Movement.X ~= 0 and Movement.Z ~= 0 then
 			AMovement.X = Movement.X * math.sqrt(0.5)
 			AMovement.Z = Movement.Z * math.sqrt(0.5)
 		end
+
 		local AV = Vector3.new(
 			((AMovement.X or Movement.X) * camCF.RightVector.X + (AMovement.Z or Movement.Z) * camCF.LookVector.X) * FlyModule.Settings.Speed,
 			Movement.Y * FlyModule.Settings.VerticalSpeed,
 			((AMovement.X or Movement.X) * camCF.RightVector.Z + (AMovement.Z or Movement.Z) * camCF.LookVector.Z) * FlyModule.Settings.Speed
 		)
+
 		if FlyModule.Settings.FlyMethod == "BodyMovers" then
 			local BM = LP.Character.HumanoidRootPart:WaitForChild("OFlyVelocity")
 			if BM.Enabled == false then
@@ -188,11 +192,20 @@ function FlyModule:Fly(Toggle:boolean)
 			BM.VectorVelocity = AV
 			return
 		end
+
 		if FlyModule.Settings.FlyMethod == "Velocity" then
-			LP.Character.HumanoidRootPart.AssemblyLinearVelocity = AV + Vector3.new(0, workspace.Gravity/100, 0)
+			LP.Character.HumanoidRootPart.AssemblyLinearVelocity = AV + Vector3.new(0, workspace.Gravity / 100, 0)
 			return
 		end
-		LP.Character.HumanoidRootPart.CFrame *= CFrame.new(AV/60)
+		
+		if not YL then
+			YL = LP.Character.HumanoidRootPart.Position.Y
+		end
+		
+		YL = YL + (Movement.Y * FlyModule.Settings.VerticalSpeed * dt)
+		
+		LP.Character.HumanoidRootPart.Velocity *= Vector3.new(1, 0, 1)
+		LP.Character.HumanoidRootPart.CFrame += AV / 60 + Vector3.new(0, YL - LP.Character.HumanoidRootPart.Position.Y, 0)
 	end))
 end
 
