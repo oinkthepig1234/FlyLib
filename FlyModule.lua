@@ -203,7 +203,7 @@ function FlyModule:Fly(Toggle:boolean)
 		YL = YL + (Movement.Y * FlyModule.Settings.VerticalSpeed * dt)
 		
 		LP.Character.HumanoidRootPart.Velocity *= Vector3.new(1, 0, 1)
-		LP.Character.HumanoidRootPart.CFrame += AV / 60 + Vector3.new(0, YL - LP.Character.HumanoidRootPart.Position.Y, 0)
+		LP.Character.HumanoidRootPart.CFrame += Vector3.new(AV.X / 60, YL - LP.Character.HumanoidRootPart.Position.Y, AV.Z / 60)
 	end))
 end
 
